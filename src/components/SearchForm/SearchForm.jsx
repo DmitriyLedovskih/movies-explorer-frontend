@@ -4,12 +4,13 @@ import "./SearchForm.css";
 const SearchForm = () => {
   return (
     <form className="search-form" name="search-form">
-      <label className="search-form__label">
+      <div className="search-form__label">
         <input
           type="text"
           className="search-form__input main-input"
           placeholder="Фильм"
           name="search-input"
+          required
         />
         <button
           className="search-form__button main-button main-button_type_primary"
@@ -17,8 +18,8 @@ const SearchForm = () => {
         >
           Поиск
         </button>
-      </label>
-      <label className="search-form__label search-form__label-checkbox">
+      </div>
+      <div className="search-form__label search-form__label-checkbox">
         <input
           type="checkbox"
           className="search-form__checkbox-input"
@@ -26,9 +27,9 @@ const SearchForm = () => {
           value="check"
           defaultChecked
         />
-        <div className="search-form__checkbox"></div>
+        <span className="search-form__checkbox"></span>
         Короткометражки
-      </label>
+      </div>
     </form>
   );
 };

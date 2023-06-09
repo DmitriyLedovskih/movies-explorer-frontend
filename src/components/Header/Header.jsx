@@ -11,20 +11,20 @@ const Header = () => {
       <div className="container">
         <div className="header__row">
           <Link to="/" className="logo">
-            <img src={logo} alt="" className="logo__image" />
+            <img src={logo} alt="Логотип сайта" className="logo__image" />
           </Link>
           <div className="header__block">
-            <Navigation />
-            <Link to="/profile" className="header__user main-link">
+            {/* <Navigation /> */}
+            {/* <Link to="/profile" className="header__user main-link">
               Аккаунт
               <img
                 src={profileIcon}
                 alt="Иконка аккаунта"
                 className="header__user-image"
               />
-            </Link>
+            </Link> */}
           </div>
-          {/* <nav className="header__links-navigation">
+          <nav className="header__links-navigation">
             <ul className="header__links-menu main-list">
               <li className="header__links-item">
                 <Link to="/signup" className="header__links-link main-link">
@@ -40,10 +40,10 @@ const Header = () => {
                 </Link>
               </li>
             </ul>
-          </nav> */}
-          <button className="header__burger main-button" type="button">
+          </nav>
+          {/* <button className="header__burger main-button" type="button">
             <span className="header__burger-line"></span>
-          </button>
+          </button> */}
         </div>
       </div>
     </header>

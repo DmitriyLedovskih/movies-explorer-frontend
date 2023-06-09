@@ -229,7 +229,7 @@
   text-decoration: none;
 }
 
-@media screen and (max-width: 820px) {
+@media screen and (max-width: 1160px) {
   .section__container {
     padding: 0 30px;
   }
@@ -237,7 +237,7 @@
 
 @media screen and (max-width: 520px) {
   .section__container {
-    padding: 0 18px;
+    padding: 0 15px;
   }
 
   .section__title {

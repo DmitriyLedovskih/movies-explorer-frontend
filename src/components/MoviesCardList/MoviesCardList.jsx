@@ -4,7 +4,7 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 
 const MoviesCardList = () => {
   return (
-    <section className="movies-cards">
+    <section className="movies-cards" aria-label="Список с фильмами">
       <div className="movies-cards__list">
         <MoviesCard />
       </div>

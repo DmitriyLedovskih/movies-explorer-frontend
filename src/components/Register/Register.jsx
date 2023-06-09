@@ -17,6 +17,7 @@ const Register = () => {
             type="text"
             className="auth-page__form-input main-input"
             name="name"
+            required
           />
         </label>
         <label className="auth-page__form-label">
@@ -25,6 +26,7 @@ const Register = () => {
             type="email"
             className="auth-page__form-input main-input"
             name="email"
+            required
           />
         </label>
         <label className="auth-page__form-label">
@@ -33,6 +35,7 @@ const Register = () => {
             type="password"
             className="auth-page__form-input main-input auth-page__form-input_type_error"
             name="password"
+            required
           />
           <span className="auth-page__form-error">Что-то пошло не так...</span>
         </label>

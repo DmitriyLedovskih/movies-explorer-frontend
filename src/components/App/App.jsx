@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import "./App.css";
 import Main from "../Main/Main";
@@ -11,9 +11,10 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 
 const App = () => {
+  const { pathname } = useLocation();
   return (
     <div className="App">
-      <Header />
+      {pathname !== "/signup" && pathname !== "/signin" && <Header />}
       <main className="content">
         <Routes>
           <Route path="/" element={<Main />} />
@@ -25,7 +26,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <Footer />
+      {pathname !== "/signup" && pathname !== "/signin" && <Footer />}
     </div>
   );
 };

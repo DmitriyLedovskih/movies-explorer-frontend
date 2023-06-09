@@ -16,6 +16,7 @@ const Login = () => {
             type="email"
             className="auth-page__form-input main-input"
             name="email"
+            required
           />
         </label>
         <label className="auth-page__form-label">
@@ -24,6 +25,7 @@ const Login = () => {
             type="password"
             className="auth-page__form-input main-input"
             name="password"
+            required
           />
         </label>
         <button

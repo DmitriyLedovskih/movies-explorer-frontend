@@ -1,0 +1,134 @@
+.about-project {
+  padding: 110px 0;
+}
+
+.about-project__title {
+  margin: 0 0 70px;
+}
+
+.about-project__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 110px;
+}
+
+.about-project__column-title {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+  color: var(--white-color);
+  margin: 0 0 26px;
+}
+
+.about-project__column-descr {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--white-color);
+  margin: 0;
+}
+
+.about-project__block {
+  display: flex;
+  align-items: center;
+}
+
+.about-project__block-column {
+  width: 100%;
+  text-align: center;
+}
+
+.about-project__block-column_active {
+  width: 25%;
+}
+
+.about-project__block-line {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  min-height: 36px;
+  background-color: var(--dark-color-third);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white-color);
+}
+
+.about-project__block-line_active {
+  background-color: var(--success-color);
+  color: var(--black-color);
+}
+
+.about-project__block-text {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--light-color);
+  margin-top: 14px;
+  display: block;
+}
+
+@media screen and (max-width: 820px) {
+  .about-project {
+    padding: 90px 20px;
+  }
+
+  .about-project__row {
+    margin-bottom: 92px;
+  }
+
+  .about-project__column-title {
+    margin-bottom: 22px;
+  }
+
+  .about-project__column-descr {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-project {
+    padding: 72px 0;
+  }
+
+  .about-project__title {
+    margin-bottom: 64px;
+    padding-bottom: 28px;
+  }
+
+  .about-project__row {
+    flex-direction: column;
+    gap: 56px;
+    margin-bottom: 60px;
+  }
+
+  .about-project__column-title {
+    font-size: 18px;
+    line-height: 21px;
+    margin-bottom: 16px;
+  }
+
+  .about-project__column-descr {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .about-project__block-column_active {
+    width: 55%;
+  }
+
+  .about-project__block-line {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
+  .about-project__block-text {
+    font-size: 11px;
+    line-height: 13px;
+    margin-top: 10px;
+  }
+}

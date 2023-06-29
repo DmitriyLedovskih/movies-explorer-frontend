@@ -21,6 +21,12 @@
   cursor: pointer;
   transition: all .4s ease-in-out;
   outline: none;
+  font-family: inherit;
+}
+
+.main-button_disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .main-button_type_primary {

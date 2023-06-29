@@ -1,35 +1,66 @@
 import React from "react";
 import "./SearchForm.css";
+import { useLocation } from "react-router-dom";
 
-const SearchForm = () => {
+const SearchForm = ({
+  values,
+  isValid,
+  errors,
+  onSearch,
+  handleChangeSearchInput,
+  handleChangeCheckbox,
+  isChecked,
+}) => {
+  const { pathname } = useLocation();
   return (
-    <form className="search-form" name="search-form">
-      <div className="search-form__label">
+    <form
+      className="search-form"
+      name="search-form"
+      onSubmit={onSearch}
+      noValidate
+    >
+      <label className="search-form__label">
         <input
           type="text"
-          className="search-form__input main-input"
-          placeholder="Фильм"
-          name="search-input"
+          className={`search-form__input ${
+            errors.searchValue ? "search-form__input_type_error" : ""
+          } main-input`}
+          placeholder={
+            errors.searchValue ? "Нужно ввести ключевое слово" : "Фильм"
+          }
+          name={
+            pathname === "/movies"
+              ? "searchMoviesValue"
+              : "searchSaveMoviesValue"
+          }
           required
+          defaultValue={values}
+          onChange={handleChangeSearchInput}
         />
         <button
-          className="search-form__button main-button main-button_type_primary"
-          type="button"
+          className={`search-form__button main-button ${
+            !isValid ? "main-button_disabled" : ""
+          } main-button_type_primary`}
+          type="submit"
+          disabled={!isValid}
         >
           Поиск
         </button>
-      </div>
-      <div className="search-form__label search-form__label-checkbox">
+      </label>
+      <label className="search-form__label search-form__label-checkbox">
         <input
           type="checkbox"
           className="search-form__checkbox-input"
-          name="search-checkbox"
-          value="check"
-          defaultChecked
+          name="searchCheckbox"
+          onChange={handleChangeCheckbox}
         />
-        <span className="search-form__checkbox"></span>
+        <span
+          className={`search-form__checkbox ${
+            isChecked ? "search-form__checkbox_checked" : ""
+          }`}
+        ></span>
         Короткометражки
-      </div>
+      </label>
     </form>
   );
 };

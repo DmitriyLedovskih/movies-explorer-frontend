@@ -4,6 +4,10 @@
   border-radius: 6px;
 }
 
+.movies-card__link {
+  text-decoration: none;
+}
+
 .movies-card__header {
   display: flex;
   justify-content: space-between;
@@ -44,7 +48,7 @@
   transition: all .4s ease-in-out;
 }
 
-.movies-card__image:hover {
+.movies-card:hover .movies-card__image {
   transform: scale(1.1);
 }
 

@@ -19,6 +19,10 @@
   padding: 25px;
 }
 
+.search-form__input_type_error::placeholder {
+  color: var(--danger-color);
+}
+
 .search-form__input:focus {
   outline: 1px solid var(--primary-color);
 }
@@ -67,7 +71,7 @@
   opacity: 0.7;
 }
 
-.search-form__checkbox-input:checked + .search-form__checkbox {
+.search-form__checkbox_checked {
   background-color: var(--success-color);
 }
 
@@ -85,7 +89,7 @@
   transition: all .4s;
 }
 
-.search-form__checkbox-input:checked + .search-form__checkbox::after {
+.search-form__checkbox_checked::after {
   transform: translate(100%, -50%);
   background-color: var(--white-color);
 }

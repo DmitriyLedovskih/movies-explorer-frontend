@@ -9,7 +9,7 @@ const Footer = () => {
           Учебный проект Яндекс.Практикум х BeatFilm.
         </p>
         <div className="footer__row">
-          <p className="footer__copyright">&copy; 2023</p>
+          <p className="footer__copyright">&copy; {new Date().getFullYear()}</p>
           <nav className="footer__navigation">
             <ul className="footer__menu main-list">
               <li className="footer__menu-item">

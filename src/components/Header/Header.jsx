@@ -5,7 +5,17 @@ import logo from "../../images/logo.svg";
 import profileIcon from "../../images/profile-icon.svg";
 import Navigation from "../Navigation/Navigation";
 
-const Header = () => {
+const Header = ({ loggedIn }) => {
+  const [isVisibleBurgerMenu, setIsVisibleBurgerMenu] = React.useState(false);
+
+  const openBurgerMenu = () => {
+    setIsVisibleBurgerMenu(!isVisibleBurgerMenu);
+  };
+
+  const closeBurgerMenu = () => {
+    setIsVisibleBurgerMenu(false);
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -13,37 +23,60 @@ const Header = () => {
           <Link to="/" className="logo">
             <img src={logo} alt="Логотип сайта" className="logo__image" />
           </Link>
-          <div className="header__block">
-            {/* <Navigation /> */}
-            {/* <Link to="/profile" className="header__user main-link">
-              Аккаунт
-              <img
-                src={profileIcon}
-                alt="Иконка аккаунта"
-                className="header__user-image"
-              />
-            </Link> */}
-          </div>
-          <nav className="header__links-navigation">
-            <ul className="header__links-menu main-list">
-              <li className="header__links-item">
-                <Link to="/signup" className="header__links-link main-link">
-                  Регистрация
-                </Link>
-              </li>
-              <li className="header__links-item">
+          {loggedIn ? (
+            <>
+              <div
+                className={`header__block ${
+                  isVisibleBurgerMenu ? "header__block_opened" : ""
+                }`}
+              >
+                <Navigation closeBurgerMenu={closeBurgerMenu} />
                 <Link
-                  to="/signin"
-                  className="header__links-button main-button main-button_type_success"
+                  to="/profile"
+                  className="header__user main-link"
+                  onClick={closeBurgerMenu}
                 >
-                  Войти
+                  Аккаунт
+                  <img
+                    src={profileIcon}
+                    alt="Иконка аккаунта"
+                    className="header__user-image"
+                  />
                 </Link>
-              </li>
-            </ul>
-          </nav>
-          {/* <button className="header__burger main-button" type="button">
-            <span className="header__burger-line"></span>
-          </button> */}
+              </div>
+              <button
+                className={`header__burger ${
+                  isVisibleBurgerMenu ? "header__burger_active" : ""
+                } main-button`}
+                type="button"
+                onClick={openBurgerMenu}
+              >
+                <span
+                  className={`header__burger-line ${
+                    isVisibleBurgerMenu ? "header__burger-line_active" : ""
+                  }`}
+                ></span>
+              </button>
+            </>
+          ) : (
+            <nav className="header__links-navigation">
+              <ul className="header__links-menu main-list">
+                <li className="header__links-item">
+                  <Link to="/signup" className="header__links-link main-link">
+                    Регистрация
+                  </Link>
+                </li>
+                <li className="header__links-item">
+                  <Link
+                    to="/signin"
+                    className="header__links-button main-button main-button_type_success"
+                  >
+                    Войти
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </header>

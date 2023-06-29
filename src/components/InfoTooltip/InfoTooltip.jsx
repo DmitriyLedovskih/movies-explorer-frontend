@@ -3,23 +3,26 @@ import "./InfoTooltip.css";
 import successIcon from "../../images/check-icon.svg";
 import errorIcon from "../../images/close-icon.svg";
 
-const InfoTooltip = () => {
+const InfoTooltip = ({
+  isOpenInfoTooltip,
+  isSuccess,
+  successText,
+  errorText,
+}) => {
   return (
-    <div className="info-tooltip">
-      <div className="info-tooltip__container">
-        <button
-          className="info-tooltip__close-button main-button"
-          type="button"
-        ></button>
-        <img
-          src={errorIcon}
-          alt="Иконка крестика"
-          className="info-tooltip__icon info-tooltip__icon_type_error"
-        />
-        <h2 className="info-tooltip__title info-tooltip__title_type_error">
-          Что-то пошло не так! Попробуйте ещё раз.
-        </h2>
-      </div>
+    <div
+      className={`info-tooltip ${
+        isOpenInfoTooltip ? "info-tooltip_opened" : ""
+      } ${isSuccess ? "info-tooltip_type_success" : "info-tooltip_type_error"}`}
+    >
+      <img
+        src={isSuccess ? successIcon : errorIcon}
+        alt={isSuccess ? "Иконка галочки" : "Иконка крестика"}
+        className="info-tooltip__icon"
+      />
+      <h2 className="info-tooltip__title">
+        {isSuccess ? successText : errorText}
+      </h2>
     </div>
   );
 };

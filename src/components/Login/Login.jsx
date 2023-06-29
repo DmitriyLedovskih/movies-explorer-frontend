@@ -16,6 +16,7 @@ const Login = ({
       navigate("/");
     }
   }, []);
+
   return (
     <section className="auth-page">
       <span className="logo auth-page__logo">
@@ -33,7 +34,7 @@ const Login = ({
             name="email"
             required
             onChange={handleChange}
-            value={values.email}
+            defaultValue={values.email}
             pattern="^\S+@\S+\.\S+$"
           />
           <span className="auth-page__form-error">{errors.email}</span>
@@ -48,7 +49,7 @@ const Login = ({
             name="password"
             required
             onChange={handleChange}
-            value={values.password}
+            defaultValue={values.password}
           />
           <span className="auth-page__form-error">{errors.password}</span>
         </label>

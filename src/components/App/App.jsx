@@ -110,6 +110,7 @@ const App = () => {
       if (data.length > 0) {
         setMeSaveMovie(data);
         localStorage.setItem("saveMovies", JSON.stringify(data));
+        console.log(data);
       }
       setIsLoading(false);
     } catch (error) {
@@ -120,9 +121,9 @@ const App = () => {
     }
   };
 
-  React.useEffect(() => {
-    getMeSaveMovies();
-  }, []);
+  // React.useEffect(() => {
+  //   getMeSaveMovies();
+  // }, []);
 
   const handleRegisterSubmit = async (evt) => {
     evt.preventDefault();
@@ -221,10 +222,10 @@ const App = () => {
         nameEN: movie.nameEN,
       });
       if (data) {
-        setMeSaveMovie((state) => [...state, data]);
+        setMeSaveMovie([...meSaveMovie, data]);
         setIsSuccess(true);
         setSuccessText("Фильм успешно сохранен!");
-        handleChangeSearchSaveMoviesCheckbox();
+        getMeSaveMovies();
       } else {
         setErrorText("Фильм не удалось сохранить!");
         setIsSuccess(false);
@@ -236,7 +237,6 @@ const App = () => {
       hideInfoTooltip();
     }
   };
-  // console.log(meSaveMovie);
 
   const handleMovieDelete = async (evt) => {
     evt.preventDefault();
@@ -249,7 +249,7 @@ const App = () => {
         setMeSaveMovie(
           saveMovies.filter((movie) => movie._id !== selectedMovie._id)
         );
-        handleChangeSearchSaveMoviesCheckbox();
+        getMeSaveMovies();
         closeAllPopups();
       } else {
         setIsSuccess(false);
@@ -383,25 +383,25 @@ const App = () => {
     }
   };
 
-  const handleChangeSearchSaveMoviesCheckbox = () => {
-    if (!saveMoviesIsChecked) {
+  const handleChangeSearchSaveMoviesCheckbox = (evt) => {
+    if (evt.target.checked) {
       const movies = saveMovies.filter((movie) => movie.duration <= 40);
       setMeSaveMovie(movies);
       localStorage.setItem("searchSaveMovies", JSON.stringify(movies));
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
-        !saveMoviesIsChecked
+        evt.target.checked
       );
-      setSaveMoviesIsChecked(!saveMoviesIsChecked);
+      setSaveMoviesIsChecked(evt.target.checked);
     } else {
       const movies = saveMovies.filter((movie) => movie.duration > 40);
       setMeSaveMovie(movies);
       localStorage.setItem("searchSaveMovies", JSON.stringify(movies));
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
-        !saveMoviesIsChecked
+        evt.target.checked
       );
-      setSaveMoviesIsChecked(!saveMoviesIsChecked);
+      setSaveMoviesIsChecked(evt.target.checked);
     }
   };
 
@@ -429,6 +429,10 @@ const App = () => {
   }, [loggedIn]);
 
   React.useEffect(() => {
+    if (loggedIn) {
+      getMeSaveMovies();
+    }
+
     if (searchCheckboxIsChecked) {
       setMoviesIsChecked(searchCheckboxIsChecked);
     }

@@ -16,6 +16,7 @@ const Register = ({
       navigate("/");
     }
   }, []);
+
   return (
     <section className="auth-page">
       <span className="logo auth-page__logo">
@@ -38,7 +39,7 @@ const Register = ({
             name="name"
             required
             onChange={handleChange}
-            value={values.name}
+            defaultValue={values.name}
             minLength="2"
             maxLength="30"
             pattern="^[А-ЯЁа-яёA-Za-z -]+$"
@@ -58,7 +59,7 @@ const Register = ({
             name="email"
             required
             onChange={handleChange}
-            value={values.email}
+            defaultValue={values.email}
             pattern="^\S+@\S+\.\S+$"
           />
           <span className="auth-page__form-error">{errors.email}</span>
@@ -73,7 +74,7 @@ const Register = ({
             name="password"
             required
             onChange={handleChange}
-            value={values.password}
+            defaultValue={values.password}
           />
           <span className="auth-page__form-error">{errors.password}</span>
         </label>

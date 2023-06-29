@@ -10,7 +10,6 @@ const MoviesCard = ({ movie, savedMovie, onSaveMovie, openDeletePopup }) => {
 
   const isSaved = savedMovie.some((mov) => mov.movieId === movie.id);
   const isDelete = savedMovie.find((mov) => mov.movieId === movie.id);
-  console.log(savedMovie, isSaved);
   // console.log(movie);
 
   return (

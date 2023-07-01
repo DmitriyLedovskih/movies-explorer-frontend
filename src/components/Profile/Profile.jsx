@@ -8,10 +8,24 @@ const Profile = ({
   isEditProfile,
   setIsEditProfile,
   handleChange,
+  values,
   errors,
   isValid,
+  isSubmitLoading,
 }) => {
   const currentUser = React.useContext(CurrentUserContext);
+  const [isUserData, setIsUserData] = React.useState(true);
+
+  React.useEffect(() => {
+    const userData =
+      currentUser.name === values.name || currentUser.email === values.email;
+    if (userData) {
+      setIsUserData(false);
+    } else {
+      setIsUserData(true);
+    }
+  }, [values.name, values.email, currentUser.name, currentUser.email]);
+
   const openProfileEdit = () => {
     setTimeout(() => {
       setIsEditProfile(true);
@@ -32,8 +46,8 @@ const Profile = ({
                   name="name"
                   className={`profile__list-input ${
                     isEditProfile ? "profile__list-input_visible" : ""
-                  } ${
-                    errors.name ? "profile__list-input_type_error" : ""
+                  } ${errors.name ? "profile__list-input_type_error" : ""} ${
+                    isSubmitLoading ? "main-input_disabled" : ""
                   } main-input`}
                   placeholder="Имя"
                   onChange={handleChange}
@@ -42,6 +56,7 @@ const Profile = ({
                   maxLength="30"
                   required
                   pattern="^[А-ЯЁа-яёA-Za-z -]+$"
+                  disabled={isSubmitLoading}
                 />
                 <span
                   className={`profile__list-text ${
@@ -62,14 +77,15 @@ const Profile = ({
                   name="email"
                   className={`profile__list-input ${
                     isEditProfile ? "profile__list-input_visible" : ""
-                  } ${
-                    errors.email ? "profile__list-input_type_error" : ""
+                  } ${errors.email ? "profile__list-input_type_error" : ""}  ${
+                    isSubmitLoading ? "main-input_disabled" : ""
                   } main-input`}
                   placeholder="E-mail"
                   onChange={handleChange}
                   defaultValue={currentUser.email}
                   required
                   pattern="^\S+@\S+\.\S+$"
+                  disabled={isSubmitLoading}
                 />
                 <span
                   className={`profile__list-text ${
@@ -86,10 +102,12 @@ const Profile = ({
             {isEditProfile ? (
               <button
                 className={`profile__links-link profile__links-link_type_edit main-button ${
-                  !isValid ? "main-button_disabled" : ""
+                  !isValid || isSubmitLoading || !isUserData
+                    ? "main-button_disabled"
+                    : ""
                 }  main-link`}
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || isSubmitLoading || !isUserData}
               >
                 Сохранить
               </button>

@@ -9,6 +9,7 @@ const PopupWithForm = ({
   isOpenPopup,
   onClose,
   onCloseOverlay,
+  isSubmitLoading,
 }) => {
   return (
     <div
@@ -23,7 +24,11 @@ const PopupWithForm = ({
         ></button>
         <form className="popup__container-form" onSubmit={onSubmit}>
           {children && children}
-          <button className="main-button main-button_type_success popup__container-button">
+          <button
+            className={`main-button ${
+              isSubmitLoading ? "main-button_disabled" : ""
+            } main-button_type_success popup__container-button`}
+          >
             {buttonText}
           </button>
         </form>

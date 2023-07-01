@@ -1,0 +1,8 @@
+export const DURATION_SHORT_FILM = 40;
+export const BREAKPOINT_DESKTOP = 990;
+export const BREAKPOINT_TABLET = 700;
+export const RENDER_MOVIE_DESKTOP = 12;
+export const RENDER_MOVIE_TABLET = 8;
+export const RENDER_MOVIE_MOBILE = 5;
+export const LOADING_MOVIE_DESKTOP = 3;
+export const LOADING_MOVIE_TABLETR_AND_MOBILE = 2;

@@ -13,6 +13,7 @@ const SavedMovies = ({
   handleChangeSearchInput,
   handleChangeCheckbox,
   isChecked,
+  isSubmitLoading,
 }) => {
   return (
     <div className="movies">
@@ -30,6 +31,7 @@ const SavedMovies = ({
           savedMovie={savedMovie}
           isLoading={isLoading}
           openDeletePopup={openDeletePopup}
+          isSubmitLoading={isSubmitLoading}
         />
       </div>
     </div>

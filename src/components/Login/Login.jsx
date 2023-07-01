@@ -8,6 +8,7 @@ const Login = ({
   onLogin,
   errors,
   isValid,
+  isSubmitLoading,
   loggedIn,
 }) => {
   const navigate = useNavigate();
@@ -19,9 +20,9 @@ const Login = ({
 
   return (
     <section className="auth-page">
-      <span className="logo auth-page__logo">
-        <img src={logo} alt="" className="logo__image" />
-      </span>
+      <Link to="/" className="logo auth-page__logo">
+        <img src={logo} alt="Логотип сайта" className="logo__image" />
+      </Link>
       <h2 className="auth-page__title">Рады видеть!</h2>
       <form name="register-form" className="auth-page__form" onSubmit={onLogin}>
         <label className="auth-page__form-label">
@@ -30,7 +31,7 @@ const Login = ({
             type="email"
             className={`auth-page__form-input ${
               errors.email ? "auth-page__form-input_type_error" : ""
-            } main-input`}
+            } ${isSubmitLoading ? "main-input_disabled" : ""} main-input`}
             name="email"
             required
             onChange={handleChange}
@@ -45,7 +46,7 @@ const Login = ({
             type="password"
             className={`auth-page__form-input ${
               errors.password ? "auth-page__form-input_type_error" : ""
-            } main-input`}
+            } ${isSubmitLoading ? "main-input_disabled" : ""} main-input`}
             name="password"
             required
             onChange={handleChange}
@@ -56,9 +57,9 @@ const Login = ({
         <button
           type="submit"
           className={`auth-page__form-button main-button main-button_type_primary ${
-            !isValid ? "main-button_disabled" : ""
+            !isValid || isSubmitLoading ? "main-button_disabled" : ""
           }`}
-          disabled={!isValid}
+          disabled={!isValid || isSubmitLoading}
         >
           Войти
         </button>

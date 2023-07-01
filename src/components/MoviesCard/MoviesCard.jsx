@@ -5,19 +5,35 @@ import checkIcon from "../../images/check-icon.svg";
 import { BASE_URL } from "../../utils/MoviesApi";
 import { useLocation } from "react-router-dom";
 
-const MoviesCard = ({ movie, savedMovie, onSaveMovie, openDeletePopup }) => {
+const MoviesCard = ({
+  movie,
+  onSaveMovie,
+  openDeletePopup,
+  isSubmitLoading,
+}) => {
   const { pathname } = useLocation();
 
-  const isSaved = savedMovie.some((mov) => mov.movieId === movie.id);
-  const isDelete = savedMovie.find((mov) => mov.movieId === movie.id);
-  // console.log(movie);
+  const saveMovies = JSON.parse(localStorage.getItem("saveMovies"));
+
+  const isSaved =
+    saveMovies && saveMovies.some((mov) => mov.movieId === movie.id);
+  const isDelete =
+    saveMovies && saveMovies.find((mov) => mov.movieId === movie.id);
+
+  const minutesToHours = () => {
+    const minutes = movie.duration % 60;
+    const hours = Math.floor(movie.duration / 60);
+    return `${hours !== 0 ? `${hours} час${hours >= 2 ? "а" : ""}` : ""} ${
+      minutes !== 0 ? `${minutes} минут` : ""
+    }`;
+  };
 
   return (
     <article className="movies-card">
       <a href={movie.trailerLink} className="movies-card__link">
         <div className="movies-card__header">
           <h2 className="movies-card__title">{movie.nameRU}</h2>
-          <p className="movies-card__time">{movie.duration} минут</p>
+          <p className="movies-card__time">{minutesToHours()}</p>
         </div>
         <div className="movies-card__thumbnail">
           <img
@@ -36,10 +52,12 @@ const MoviesCard = ({ movie, savedMovie, onSaveMovie, openDeletePopup }) => {
           <button
             className={`movies-card__button ${
               isSaved ? "movies-card__button_active" : ""
-            } main-button_type_dark main-button`}
+            } main-button_type_dark main-button ${
+              isSubmitLoading ? "main-button_disabled" : ""
+            }`}
             type="button"
             onClick={() =>
-              !isSaved ? onSaveMovie(movie) : openDeletePopup(isDelete)
+              !isSaved ? onSaveMovie(movie) : openDeletePopup(isDelete._id)
             }
           >
             <>
@@ -58,7 +76,7 @@ const MoviesCard = ({ movie, savedMovie, onSaveMovie, openDeletePopup }) => {
           <button
             className="movies-card__button main-button_type_dark main-button"
             type="button"
-            onClick={() => openDeletePopup(movie)}
+            onClick={() => openDeletePopup(movie._id)}
           >
             <img
               src={closeIcon}

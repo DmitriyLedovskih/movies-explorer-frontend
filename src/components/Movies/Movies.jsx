@@ -1,7 +1,6 @@
 import React from "react";
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import { useLocation } from "react-router-dom";
 
 const Movies = ({
   movies,
@@ -9,7 +8,6 @@ const Movies = ({
   onSaveMovie,
   openDeletePopup,
   isLoading,
-  getMovies,
   renderMovie,
   values,
   isValid,
@@ -19,6 +17,7 @@ const Movies = ({
   handleChangeCheckbox,
   isChecked,
   onclickLoadMore,
+  isSubmitLoading,
 }) => {
   return (
     <div className="movies">
@@ -40,6 +39,7 @@ const Movies = ({
           openDeletePopup={openDeletePopup}
           renderMovie={renderMovie}
           onclickLoadMore={onclickLoadMore}
+          isSubmitLoading={isSubmitLoading}
         />
       </div>
     </div>

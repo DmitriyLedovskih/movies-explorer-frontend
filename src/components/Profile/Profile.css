@@ -54,18 +54,19 @@
   border: 1px solid var(--dark-color-other);
   color: var(--white-color);
   max-width: 150px;
-  height: 21px;
-  opacity: 0;
+  width: 0;
+  height: 0;
   visibility: hidden;
   transform: scale(0);
   text-align: right;
 }
 
 .profile__list-input_visible {
-  opacity: 1;
   visibility: visible;
   transform: scale(1);
   position: static;
+  width: auto;
+  height: 21px;
 }
 
 .profile__list-input_type_error {

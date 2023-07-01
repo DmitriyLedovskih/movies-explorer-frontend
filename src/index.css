@@ -107,6 +107,11 @@
   outline: none;
 }
 
+.main-input_disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .container {
   max-width: 1140px;
   margin: 0 auto;

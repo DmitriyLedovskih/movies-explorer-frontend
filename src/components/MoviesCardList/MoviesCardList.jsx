@@ -11,6 +11,7 @@ const MoviesCardList = ({
   openDeletePopup,
   renderMovie,
   onclickLoadMore,
+  isSubmitLoading,
 }) => {
   return (
     <section className="movies-cards" aria-label="Список с фильмами">
@@ -24,9 +25,9 @@ const MoviesCardList = ({
                 <MoviesCard
                   movie={movie}
                   key={movie.id}
-                  savedMovie={savedMovie}
                   onSaveMovie={onSaveMovie}
                   openDeletePopup={openDeletePopup}
+                  isSubmitLoading={isSubmitLoading}
                 />
               ))}
             </div>
@@ -43,15 +44,15 @@ const MoviesCardList = ({
         ) : (
           <p className="movies-cards__not-found">Ничего не найдено :(</p>
         )
-      ) : savedMovie.length > 0 ? (
+      ) : savedMovie && savedMovie.length > 0 ? (
         <div className="movies-cards__list">
           {savedMovie.map((movie) => (
             <MoviesCard
               movie={movie}
               key={movie.movieId}
-              savedMovie={savedMovie}
               onSaveMovie={onSaveMovie}
               openDeletePopup={openDeletePopup}
+              isSubmitLoading={isSubmitLoading}
             />
           ))}
         </div>

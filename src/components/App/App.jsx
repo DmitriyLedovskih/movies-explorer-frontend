@@ -26,6 +26,16 @@ import { BASE_URL, getMovies } from "../../utils/MoviesApi";
 import ProctectedRouteElement from "../ProtectedRoute/ProtectedRoute";
 import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 import DeleteMoviePopup from "../DeleteMoviePopup/DeleteMoviePopup";
+import {
+  BREAKPOINT_DESKTOP,
+  BREAKPOINT_TABLET,
+  DURATION_SHORT_FILM,
+  LOADING_MOVIE_DESKTOP,
+  LOADING_MOVIE_TABLETR_AND_MOBILE,
+  RENDER_MOVIE_DESKTOP,
+  RENDER_MOVIE_MOBILE,
+  RENDER_MOVIE_TABLET,
+} from "../../utils/constants";
 
 const App = () => {
   const { pathname } = useLocation();
@@ -50,7 +60,7 @@ const App = () => {
   const [moviesIsChecked, setMoviesIsChecked] = React.useState(false);
   const [saveMoviesIsChecked, setSaveMoviesIsChecked] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [selectedMovie, setSelectedMovie] = React.useState({});
+  const [movieId, setMovieId] = React.useState("");
   const [movies, setMovies] = React.useState([]);
   const [meSaveMovie, setMeSaveMovie] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -63,9 +73,66 @@ const App = () => {
   );
   const [isLoadingButtonText, setIsLoadingButtonText] = React.useState(false);
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
-  const [renderMovie, setRenderMovie] = React.useState(12);
-  const [loadMovie, setLoadMovie] = React.useState(3);
+  const [renderMovie, setRenderMovie] = React.useState(RENDER_MOVIE_DESKTOP);
+  const [loadMovie, setLoadMovie] = React.useState(LOADING_MOVIE_DESKTOP);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [isSubmitLoading, setIsSubmitLoading] = React.useState(false);
+
+  const filterMovieDuration =
+    allMovies &&
+    allMovies.filter((movie) =>
+      moviesIsChecked
+        ? movie.duration <= DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM
+    );
+
+  const filterSaveMovieDuration =
+    saveMovies &&
+    saveMovies.filter((movie) =>
+      saveMoviesIsChecked
+        ? movie.duration <= DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM
+    );
+
+  const filterFullMovies =
+    allMovies &&
+    allMovies.filter((movie) =>
+      searchInputValue
+        ? movie.nameRU.toLowerCase().includes(searchInputValue.toLowerCase()) &&
+          movie.duration <= DURATION_SHORT_FILM
+        : movie.duration <= DURATION_SHORT_FILM
+    );
+
+  const filterSaveFullMovies =
+    saveMovies &&
+    saveMovies.filter((movie) =>
+      searchSaveMoviesInputValue
+        ? movie.nameRU
+            .toLowerCase()
+            .includes(searchSaveMoviesInputValue.toLowerCase()) &&
+          movie.duration <= DURATION_SHORT_FILM
+        : movie.duration <= DURATION_SHORT_FILM
+    );
+
+  const filterShortMovies =
+    allMovies &&
+    allMovies.filter((movie) =>
+      searchInputValue
+        ? movie.nameRU.toLowerCase().includes(searchInputValue.toLowerCase()) &&
+          movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM
+    );
+
+  const filterSaveShortMovies =
+    saveMovies &&
+    saveMovies.filter((movie) =>
+      searchSaveMoviesInputValue
+        ? movie.nameRU
+            .toLowerCase()
+            .includes(searchSaveMoviesInputValue.toLowerCase()) &&
+          movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM
+    );
 
   const hideInfoTooltip = () => {
     setTimeout(() => {
@@ -87,10 +154,10 @@ const App = () => {
   };
 
   const getAllMovies = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const data = await getMovies();
-      if (data.length > 0) {
+      if (data) {
         setMovies(data);
         localStorage.setItem("allMovies", JSON.stringify(data));
       }
@@ -104,13 +171,12 @@ const App = () => {
   };
 
   const getMeSaveMovies = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const data = await getSaveMovies();
-      if (data.length > 0) {
+      if (data) {
         setMeSaveMovie(data);
         localStorage.setItem("saveMovies", JSON.stringify(data));
-        console.log(data);
       }
       setIsLoading(false);
     } catch (error) {
@@ -121,26 +187,26 @@ const App = () => {
     }
   };
 
-  // React.useEffect(() => {
-  //   getMeSaveMovies();
-  // }, []);
-
   const handleRegisterSubmit = async (evt) => {
     evt.preventDefault();
+    setIsSubmitLoading(true);
     try {
       const data = await register(values.name, values.email, values.password);
       if (data.data) {
-        navigate("/signin");
+        navigate("/movies");
         resetForm();
+        setCurrentUser(data.user);
+        localStorage.setItem("loggedIn", true);
         setIsSuccess(true);
         setSuccessText("Вы успешно зарегистрировались!");
-      } else {
-        setErrorText(data.message);
-        setIsSuccess(false);
+        getAllMovies();
+        getMeSaveMovies();
       }
     } catch (error) {
       setIsSuccess(false);
+      setErrorText(error);
     } finally {
+      setIsSubmitLoading(false);
       setIsOpenInfoTooltip(true);
       hideInfoTooltip();
     }
@@ -148,6 +214,7 @@ const App = () => {
 
   const handleLoginSubmit = async (evt) => {
     evt.preventDefault();
+    setIsSubmitLoading(true);
     try {
       const data = await login(values.email, values.password);
       if (data.user) {
@@ -157,13 +224,14 @@ const App = () => {
         localStorage.setItem("loggedIn", true);
         setIsSuccess(true);
         setSuccessText("Вы успешно авторизовались!");
-      } else {
-        setErrorText(data.message);
-        setIsSuccess(false);
+        getAllMovies();
+        getMeSaveMovies();
       }
     } catch (error) {
       setIsSuccess(false);
+      setErrorText(error);
     } finally {
+      setIsSubmitLoading(false);
       setIsOpenInfoTooltip(true);
       hideInfoTooltip();
     }
@@ -171,6 +239,7 @@ const App = () => {
 
   const handleEditProfile = async (evt) => {
     evt.preventDefault();
+    setIsSubmitLoading(true);
     try {
       const data = await editProfile(values.name, values.email);
       if (data.data) {
@@ -179,10 +248,11 @@ const App = () => {
         setSuccessText("Вы успешно изменили данные!");
         setIsSuccess(true);
       }
-      setErrorText(data.message);
     } catch (error) {
       setIsSuccess(false);
+      setErrorText(error);
     } finally {
+      setIsSubmitLoading(false);
       setIsOpenInfoTooltip(true);
       hideInfoTooltip();
     }
@@ -207,6 +277,7 @@ const App = () => {
   };
 
   const postMovie = async (movie) => {
+    setIsSubmitLoading(true);
     try {
       const data = await saveMovie({
         country: movie.country,
@@ -222,17 +293,25 @@ const App = () => {
         nameEN: movie.nameEN,
       });
       if (data) {
-        setMeSaveMovie([...meSaveMovie, data]);
+        const mov = [...saveMovies, data].filter((movie) =>
+          saveMoviesIsChecked
+            ? movie.duration <= DURATION_SHORT_FILM
+            : movie.duration > DURATION_SHORT_FILM
+        );
+        setMeSaveMovie(mov);
+        localStorage.setItem("searchSaveMovies", JSON.stringify(mov));
+        localStorage.setItem(
+          "saveMovies",
+          JSON.stringify([...saveMovies, data])
+        );
         setIsSuccess(true);
         setSuccessText("Фильм успешно сохранен!");
-        getMeSaveMovies();
-      } else {
-        setErrorText("Фильм не удалось сохранить!");
-        setIsSuccess(false);
       }
     } catch (error) {
       setIsSuccess(false);
+      setErrorText("Фильм не удалось сохранить!");
     } finally {
+      setIsSubmitLoading(false);
       setIsOpenInfoTooltip(true);
       hideInfoTooltip();
     }
@@ -241,37 +320,45 @@ const App = () => {
   const handleMovieDelete = async (evt) => {
     evt.preventDefault();
     setIsLoadingButtonText(true);
+    setIsSubmitLoading(true);
     try {
-      const { message } = await deleteSaveMovie(selectedMovie._id);
-      if (message === "Фильм удален") {
+      const { message } = await deleteSaveMovie(movieId);
+      if (message) {
+        const deleteMovie = saveMovies.filter((movie) => movie._id !== movieId);
+        const saveDeleteMovie = saveMovies.filter((movie) =>
+          saveMoviesIsChecked
+            ? movie.duration <= DURATION_SHORT_FILM && movie._id !== movieId
+            : movie.duration > DURATION_SHORT_FILM && movie._id !== movieId
+        );
         setIsSuccess(true);
         setSuccessText(message);
-        setMeSaveMovie(
-          saveMovies.filter((movie) => movie._id !== selectedMovie._id)
+        setMeSaveMovie(saveDeleteMovie);
+        localStorage.setItem(
+          "searchSaveMovies",
+          JSON.stringify(saveDeleteMovie)
         );
-        getMeSaveMovies();
+        localStorage.setItem("saveMovies", JSON.stringify(deleteMovie));
         closeAllPopups();
-      } else {
-        setIsSuccess(false);
-        setErrorText(message);
       }
     } catch (error) {
       setIsSuccess(false);
+      setErrorText(error);
     } finally {
+      setIsSubmitLoading(false);
       setIsOpenInfoTooltip(true);
       hideInfoTooltip();
       setIsLoadingButtonText(false);
     }
   };
 
-  const handleDeleteMovieClick = (movie) => {
+  const handleDeleteMovieClick = (id) => {
     setIsOpenPopup(!isOpenPopup);
-    setSelectedMovie(movie);
+    setMovieId(id);
   };
 
   const closeAllPopups = () => {
     setIsOpenPopup(false);
-    setSelectedMovie({});
+    setMovieId("");
   };
 
   const closeByOverlay = (evt) => {
@@ -301,15 +388,15 @@ const App = () => {
 
   const onResize = () => {
     setTimeout(() => {
-      if (windowWidth >= 990) {
-        setRenderMovie(12);
-        setLoadMovie(3);
-      } else if (windowWidth >= 700) {
-        setRenderMovie(8);
-        setLoadMovie(2);
+      if (windowWidth >= BREAKPOINT_DESKTOP) {
+        setRenderMovie(RENDER_MOVIE_DESKTOP);
+        setLoadMovie(LOADING_MOVIE_DESKTOP);
+      } else if (windowWidth >= BREAKPOINT_TABLET) {
+        setRenderMovie(RENDER_MOVIE_TABLET);
+        setLoadMovie(LOADING_MOVIE_TABLETR_AND_MOBILE);
       } else {
-        setRenderMovie(5);
-        setLoadMovie(2);
+        setRenderMovie(RENDER_MOVIE_MOBILE);
+        setLoadMovie(LOADING_MOVIE_TABLETR_AND_MOBILE);
       }
     }, 1000);
   };
@@ -328,30 +415,46 @@ const App = () => {
 
   const handleSearch = (evt) => {
     evt.preventDefault();
-    setIsLoading(true);
     if (pathname === "/movies") {
-      const movies = allMovies.filter((movie) =>
-        movie.nameRU
-          .toLowerCase()
-          .includes(values.searchMoviesValue.toLowerCase())
+      const searchAndFilterMovies = allMovies.filter((movie) =>
+        moviesIsChecked
+          ? movie.duration <= DURATION_SHORT_FILM &&
+            movie.nameRU
+              .toLowerCase()
+              .includes(values.searchMoviesValue.toLowerCase())
+          : movie.duration > DURATION_SHORT_FILM &&
+            movie.nameRU
+              .toLowerCase()
+              .includes(values.searchMoviesValue.toLowerCase())
       );
-      setMovies(movies);
-      localStorage.setItem("searchMovies", JSON.stringify(movies));
+      setMovies(searchAndFilterMovies);
+      localStorage.setItem(
+        "searchMovies",
+        JSON.stringify(searchAndFilterMovies)
+      );
       localStorage.setItem("searchInputValue", values.searchMoviesValue);
     } else {
-      const movies = saveMovies.filter((movie) =>
-        movie.nameRU
-          .toLowerCase()
-          .includes(values.searchSaveMoviesValue.toLowerCase())
+      const searchAndFilterSaveMovies = saveMovies.filter((movie) =>
+        saveMoviesIsChecked
+          ? movie.duration <= DURATION_SHORT_FILM &&
+            movie.nameRU
+              .toLowerCase()
+              .includes(values.searchSaveMoviesValue.toLowerCase())
+          : movie.duration > DURATION_SHORT_FILM &&
+            movie.nameRU
+              .toLowerCase()
+              .includes(values.searchSaveMoviesValue.toLowerCase())
       );
-      setMeSaveMovie(movies);
-      localStorage.setItem("searchSaveMovies", JSON.stringify(movies));
+      setMeSaveMovie(searchAndFilterSaveMovies);
+      localStorage.setItem(
+        "searchSaveMovies",
+        JSON.stringify(searchAndFilterSaveMovies)
+      );
       localStorage.setItem(
         "searchSaveMoviesInputValue",
         values.searchSaveMoviesValue
       );
     }
-    setIsLoading(false);
   };
 
   const handleChangeSearchInput = (evt) => {
@@ -359,44 +462,46 @@ const App = () => {
     if (evt.target.value === "" && pathname === "/movies") {
       localStorage.removeItem("searchMovies");
       localStorage.removeItem("searchInputValue");
-      getAllMovies();
+      setMovies(filterMovieDuration);
     } else if (evt.target.value === "" && pathname === "/saved-movies") {
       localStorage.removeItem("searchSaveMovies");
       localStorage.removeItem("searchSaveMoviesInputValue");
-      getMeSaveMovies();
+      setMeSaveMovie(filterSaveMovieDuration);
     }
   };
 
-  const handleChangeSearchCheckbox = (evt) => {
-    if (evt.target.checked) {
-      const movies = allMovies.filter((movie) => movie.duration <= 40);
-      setMovies(movies);
-      localStorage.setItem("searchMovies", JSON.stringify(movies));
-      localStorage.setItem("searchCheckboxIsChecked", evt.target.checked);
-      setMoviesIsChecked(evt.target.checked);
+  const handleChangeSearchCheckbox = () => {
+    if (!moviesIsChecked) {
+      setMovies(filterFullMovies);
+      localStorage.setItem("searchMovies", JSON.stringify(filterFullMovies));
+      localStorage.setItem("searchCheckboxIsChecked", !moviesIsChecked);
+      setMoviesIsChecked(!moviesIsChecked);
     } else {
-      const movies = allMovies.filter((movie) => movie.duration > 40);
-      setMovies(movies);
-      localStorage.setItem("searchMovies", JSON.stringify(movies));
-      localStorage.setItem("searchCheckboxIsChecked", evt.target.checked);
-      setMoviesIsChecked(evt.target.checked);
+      setMovies(filterShortMovies);
+      localStorage.setItem("searchMovies", JSON.stringify(filterShortMovies));
+      localStorage.setItem("searchCheckboxIsChecked", !moviesIsChecked);
+      setMoviesIsChecked(!moviesIsChecked);
     }
   };
 
   const handleChangeSearchSaveMoviesCheckbox = (evt) => {
     if (evt.target.checked) {
-      const movies = saveMovies.filter((movie) => movie.duration <= 40);
-      setMeSaveMovie(movies);
-      localStorage.setItem("searchSaveMovies", JSON.stringify(movies));
+      setMeSaveMovie(filterSaveFullMovies);
+      localStorage.setItem(
+        "searchSaveMovies",
+        JSON.stringify(filterSaveFullMovies)
+      );
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
         evt.target.checked
       );
       setSaveMoviesIsChecked(evt.target.checked);
     } else {
-      const movies = saveMovies.filter((movie) => movie.duration > 40);
-      setMeSaveMovie(movies);
-      localStorage.setItem("searchSaveMovies", JSON.stringify(movies));
+      setMeSaveMovie(filterSaveShortMovies);
+      localStorage.setItem(
+        "searchSaveMovies",
+        JSON.stringify(filterSaveShortMovies)
+      );
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
         evt.target.checked
@@ -406,39 +511,39 @@ const App = () => {
   };
 
   React.useEffect(() => {
-    if (searchMovies) {
-      setMovies(searchMovies);
-      setIsLoading(false);
+    if (loggedIn && !searchInputValue) {
+      setMovies(filterMovieDuration);
+      localStorage.setItem("searchMovies", JSON.stringify(filterMovieDuration));
     }
 
-    if (loggedIn && !searchMovies) {
-      getAllMovies();
-    }
-
-    if (searchSaveMovies) {
-      setMeSaveMovie(searchSaveMovies);
-    }
-
-    if (loggedIn && !searchSaveMovies) {
-      getMeSaveMovies();
+    if (loggedIn && !searchSaveMoviesInputValue) {
+      setMeSaveMovie(filterSaveMovieDuration);
+      localStorage.setItem(
+        "searchSaveMovies",
+        JSON.stringify(filterSaveMovieDuration)
+      );
     }
 
     if (loggedIn) {
       getMe();
     }
-  }, [loggedIn]);
+  }, [loggedIn, pathname]);
 
   React.useEffect(() => {
-    if (loggedIn) {
-      getMeSaveMovies();
-    }
-
-    if (searchCheckboxIsChecked) {
+    if (searchMovies) {
       setMoviesIsChecked(searchCheckboxIsChecked);
+      setMovies(searchMovies);
+      setIsLoading(false);
+    } else {
+      setMovies(allMovies);
     }
 
-    if (searchSaveMoviesCheckboxIsChecked) {
+    if (searchSaveMovies) {
       setSaveMoviesIsChecked(searchSaveMoviesCheckboxIsChecked);
+      setMeSaveMovie(searchSaveMovies);
+      setIsLoading(false);
+    } else {
+      setMeSaveMovie(filterSaveMovieDuration);
     }
   }, []);
 
@@ -462,7 +567,6 @@ const App = () => {
                   onSaveMovie={postMovie}
                   openDeletePopup={handleDeleteMovieClick}
                   isLoading={isLoading}
-                  getMovies={getAllMovies}
                   setIsLoading={setIsLoading}
                   renderMovie={renderMovie}
                   values={
@@ -477,6 +581,7 @@ const App = () => {
                   handleChangeCheckbox={handleChangeSearchCheckbox}
                   isChecked={moviesIsChecked}
                   onclickLoadMore={onclickLoadMore}
+                  isSubmitLoading={isSubmitLoading}
                   loggedIn={loggedIn}
                 />
               }
@@ -500,6 +605,7 @@ const App = () => {
                   handleChangeSearchInput={handleChangeSearchInput}
                   handleChangeCheckbox={handleChangeSearchSaveMoviesCheckbox}
                   isChecked={saveMoviesIsChecked}
+                  isSubmitLoading={isSubmitLoading}
                   loggedIn={loggedIn}
                 />
               }
@@ -513,6 +619,7 @@ const App = () => {
                   onRegister={handleRegisterSubmit}
                   errors={errors}
                   isValid={isValid}
+                  isSubmitLoading={isSubmitLoading}
                   loggedIn={loggedIn}
                 />
               }
@@ -526,6 +633,7 @@ const App = () => {
                   onLogin={handleLoginSubmit}
                   errors={errors}
                   isValid={isValid}
+                  isSubmitLoading={isSubmitLoading}
                   loggedIn={loggedIn}
                 />
               }
@@ -540,8 +648,10 @@ const App = () => {
                   isEditProfile={isEditProfile}
                   setIsEditProfile={setIsEditProfile}
                   handleChange={handleChange}
+                  values={values}
                   errors={errors}
                   isValid={isValid}
+                  isSubmitLoading={isSubmitLoading}
                   loggedIn={loggedIn}
                 />
               }
@@ -565,6 +675,7 @@ const App = () => {
           isOpenPopup={isOpenPopup}
           onClose={closeAllPopups}
           onCloseOverlay={closeByOverlay}
+          isSubmitLoading={isSubmitLoading}
         />
       </CurrentUserContext.Provider>
     </div>

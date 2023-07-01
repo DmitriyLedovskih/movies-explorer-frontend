@@ -8,6 +8,7 @@ const DeleteMoviePopup = ({
   isOpenPopup,
   onClose,
   onCloseOverlay,
+  isSubmitLoading,
 }) => {
   return (
     <PopupWithForm
@@ -17,6 +18,7 @@ const DeleteMoviePopup = ({
       isOpenPopup={isOpenPopup}
       onClose={onClose}
       onCloseOverlay={onCloseOverlay}
+      isSubmitLoading={isSubmitLoading}
     />
   );
 };

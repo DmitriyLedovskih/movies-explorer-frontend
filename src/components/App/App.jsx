@@ -470,17 +470,17 @@ const App = () => {
     }
   };
 
-  const handleChangeSearchCheckbox = () => {
-    if (!moviesIsChecked) {
+  const handleChangeSearchCheckbox = (evt) => {
+    if (evt.target.checked) {
       setMovies(filterFullMovies);
       localStorage.setItem("searchMovies", JSON.stringify(filterFullMovies));
-      localStorage.setItem("searchCheckboxIsChecked", !moviesIsChecked);
-      setMoviesIsChecked(!moviesIsChecked);
+      localStorage.setItem("searchCheckboxIsChecked", evt.target.checked);
+      setMoviesIsChecked(evt.target.checked);
     } else {
       setMovies(filterShortMovies);
       localStorage.setItem("searchMovies", JSON.stringify(filterShortMovies));
-      localStorage.setItem("searchCheckboxIsChecked", !moviesIsChecked);
-      setMoviesIsChecked(!moviesIsChecked);
+      localStorage.setItem("searchCheckboxIsChecked", evt.target.checked);
+      setMoviesIsChecked(evt.target.checked);
     }
   };
 

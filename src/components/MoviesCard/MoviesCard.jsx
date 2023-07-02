@@ -4,6 +4,7 @@ import closeIcon from "../../images/close-icon.svg";
 import checkIcon from "../../images/check-icon.svg";
 import { BASE_URL } from "../../utils/MoviesApi";
 import { useLocation } from "react-router-dom";
+import { MINUTES_NUMBER } from "../../utils/constants";
 
 const MoviesCard = ({
   movie,
@@ -21,8 +22,8 @@ const MoviesCard = ({
     saveMovies && saveMovies.find((mov) => mov.movieId === movie.id);
 
   const minutesToHours = () => {
-    const minutes = movie.duration % 60;
-    const hours = Math.floor(movie.duration / 60);
+    const minutes = movie.duration % MINUTES_NUMBER;
+    const hours = Math.floor(movie.duration / MINUTES_NUMBER);
     return `${hours !== 0 ? `${hours} час${hours >= 2 ? "а" : ""}` : ""} ${
       minutes !== 0 ? `${minutes} минут` : ""
     }`;

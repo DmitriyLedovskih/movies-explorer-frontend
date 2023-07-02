@@ -12,14 +12,22 @@ const Profile = ({
   errors,
   isValid,
   isSubmitLoading,
+  setValues,
 }) => {
   const currentUser = React.useContext(CurrentUserContext);
   const [isUserData, setIsUserData] = React.useState(true);
 
   React.useEffect(() => {
-    const userData =
-      currentUser.name === values.name || currentUser.email === values.email;
-    if (userData) {
+    if (currentUser) {
+      setValues({ name: currentUser.name, email: currentUser.email });
+    }
+  }, [currentUser.name, currentUser.email]);
+
+  React.useEffect(() => {
+    if (
+      values.name === currentUser.name ||
+      values.email === currentUser.email
+    ) {
       setIsUserData(false);
     } else {
       setIsUserData(true);

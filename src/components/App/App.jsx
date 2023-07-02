@@ -31,7 +31,7 @@ import {
   BREAKPOINT_TABLET,
   DURATION_SHORT_FILM,
   LOADING_MOVIE_DESKTOP,
-  LOADING_MOVIE_TABLETR_AND_MOBILE,
+  LOADING_MOVIE_TABLET_AND_MOBILE,
   RENDER_MOVIE_DESKTOP,
   RENDER_MOVIE_MOBILE,
   RENDER_MOVIE_TABLET,
@@ -40,8 +40,15 @@ import {
 const App = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { values, handleChange, errors, isValid, resetForm } =
-    useFormWithValidation();
+  const {
+    values,
+    setValues,
+    setIsValid,
+    handleChange,
+    errors,
+    isValid,
+    resetForm,
+  } = useFormWithValidation();
   const allMovies = JSON.parse(localStorage.getItem("allMovies"));
   const saveMovies = JSON.parse(localStorage.getItem("saveMovies"));
   const searchMovies = JSON.parse(localStorage.getItem("searchMovies"));
@@ -134,6 +141,14 @@ const App = () => {
         : movie.duration > DURATION_SHORT_FILM
     );
 
+  const signOutParams = () => {
+    localStorage.clear();
+    setMeSaveMovie([]);
+    navigate("/");
+    resetForm();
+    setIsEditProfile(false);
+  };
+
   const hideInfoTooltip = () => {
     setTimeout(() => {
       setIsOpenInfoTooltip(false);
@@ -149,7 +164,10 @@ const App = () => {
         localStorage.setItem("loggedIn", true);
       }
     } catch (error) {
-      localStorage.setItem("loggedIn", false);
+      signOutParams();
+      setIsSuccess(false);
+      setIsOpenInfoTooltip(true);
+      hideInfoTooltip();
     }
   };
 
@@ -247,6 +265,7 @@ const App = () => {
         setIsEditProfile(false);
         setSuccessText("Вы успешно изменили данные!");
         setIsSuccess(true);
+        resetForm();
       }
     } catch (error) {
       setIsSuccess(false);
@@ -262,11 +281,8 @@ const App = () => {
     try {
       const { message } = await signOut();
       if (message) {
-        localStorage.clear();
-        setMeSaveMovie([]);
+        signOutParams();
         setIsSuccess(true);
-        navigate("/");
-        setSuccessText(message);
       }
     } catch (error) {
       setIsSuccess(false);
@@ -393,10 +409,10 @@ const App = () => {
         setLoadMovie(LOADING_MOVIE_DESKTOP);
       } else if (windowWidth >= BREAKPOINT_TABLET) {
         setRenderMovie(RENDER_MOVIE_TABLET);
-        setLoadMovie(LOADING_MOVIE_TABLETR_AND_MOBILE);
+        setLoadMovie(LOADING_MOVIE_TABLET_AND_MOBILE);
       } else {
         setRenderMovie(RENDER_MOVIE_MOBILE);
-        setLoadMovie(LOADING_MOVIE_TABLETR_AND_MOBILE);
+        setLoadMovie(LOADING_MOVIE_TABLET_AND_MOBILE);
       }
     }, 1000);
   };
@@ -415,45 +431,52 @@ const App = () => {
 
   const handleSearch = (evt) => {
     evt.preventDefault();
-    if (pathname === "/movies") {
-      const searchAndFilterMovies = allMovies.filter((movie) =>
-        moviesIsChecked
-          ? movie.duration <= DURATION_SHORT_FILM &&
-            movie.nameRU
-              .toLowerCase()
-              .includes(values.searchMoviesValue.toLowerCase())
-          : movie.duration > DURATION_SHORT_FILM &&
-            movie.nameRU
-              .toLowerCase()
-              .includes(values.searchMoviesValue.toLowerCase())
-      );
-      setMovies(searchAndFilterMovies);
-      localStorage.setItem(
-        "searchMovies",
-        JSON.stringify(searchAndFilterMovies)
-      );
-      localStorage.setItem("searchInputValue", values.searchMoviesValue);
-    } else {
-      const searchAndFilterSaveMovies = saveMovies.filter((movie) =>
-        saveMoviesIsChecked
-          ? movie.duration <= DURATION_SHORT_FILM &&
-            movie.nameRU
-              .toLowerCase()
-              .includes(values.searchSaveMoviesValue.toLowerCase())
-          : movie.duration > DURATION_SHORT_FILM &&
-            movie.nameRU
-              .toLowerCase()
-              .includes(values.searchSaveMoviesValue.toLowerCase())
-      );
-      setMeSaveMovie(searchAndFilterSaveMovies);
-      localStorage.setItem(
-        "searchSaveMovies",
-        JSON.stringify(searchAndFilterSaveMovies)
-      );
-      localStorage.setItem(
-        "searchSaveMoviesInputValue",
-        values.searchSaveMoviesValue
-      );
+    try {
+      setIsValid(false);
+      if (pathname === "/movies") {
+        const searchAndFilterMovies = allMovies.filter((movie) =>
+          moviesIsChecked
+            ? movie.duration <= DURATION_SHORT_FILM &&
+              movie.nameRU
+                .toLowerCase()
+                .includes(values.searchMoviesValue.toLowerCase())
+            : movie.duration > DURATION_SHORT_FILM &&
+              movie.nameRU
+                .toLowerCase()
+                .includes(values.searchMoviesValue.toLowerCase())
+        );
+        setMovies(searchAndFilterMovies);
+        localStorage.setItem(
+          "searchMovies",
+          JSON.stringify(searchAndFilterMovies)
+        );
+        localStorage.setItem("searchInputValue", values.searchMoviesValue);
+      } else {
+        const searchAndFilterSaveMovies = saveMovies.filter((movie) =>
+          saveMoviesIsChecked
+            ? movie.duration <= DURATION_SHORT_FILM &&
+              movie.nameRU
+                .toLowerCase()
+                .includes(values.searchSaveMoviesValue.toLowerCase())
+            : movie.duration > DURATION_SHORT_FILM &&
+              movie.nameRU
+                .toLowerCase()
+                .includes(values.searchSaveMoviesValue.toLowerCase())
+        );
+        setMeSaveMovie(searchAndFilterSaveMovies);
+        localStorage.setItem(
+          "searchSaveMovies",
+          JSON.stringify(searchAndFilterSaveMovies)
+        );
+        localStorage.setItem(
+          "searchSaveMoviesInputValue",
+          values.searchSaveMoviesValue
+        );
+      }
+    } catch (error) {
+      setErrorText("Введите название фильма!");
+      setIsOpenInfoTooltip(true);
+      hideInfoTooltip();
     }
   };
 
@@ -463,10 +486,12 @@ const App = () => {
       localStorage.removeItem("searchMovies");
       localStorage.removeItem("searchInputValue");
       setMovies(filterMovieDuration);
+      resetForm();
     } else if (evt.target.value === "" && pathname === "/saved-movies") {
       localStorage.removeItem("searchSaveMovies");
       localStorage.removeItem("searchSaveMoviesInputValue");
       setMeSaveMovie(filterSaveMovieDuration);
+      resetForm();
     }
   };
 
@@ -546,6 +571,9 @@ const App = () => {
       setMeSaveMovie(filterSaveMovieDuration);
     }
   }, []);
+
+  // Не могу понять это комментарий: блоков catch не должно быть в самих запросах, следует их расположить только в конце цепочки
+  // Блок catch есть везде вроде
 
   return (
     <div className="App">
@@ -652,6 +680,7 @@ const App = () => {
                   errors={errors}
                   isValid={isValid}
                   isSubmitLoading={isSubmitLoading}
+                  setValues={setValues}
                   loggedIn={loggedIn}
                 />
               }

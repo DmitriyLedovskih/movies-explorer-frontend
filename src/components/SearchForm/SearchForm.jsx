@@ -12,6 +12,15 @@ const SearchForm = ({
   isChecked,
 }) => {
   const { pathname } = useLocation();
+
+  const isErrorText = (text) => {
+    return text ? "Нужно ввести ключевое слово" : "Фильм";
+  };
+
+  const isErrorClassName = (error) => {
+    return error ? "search-form__input_type_error" : "";
+  };
+
   return (
     <form
       className="search-form"
@@ -23,10 +32,14 @@ const SearchForm = ({
         <input
           type="text"
           className={`search-form__input ${
-            errors.searchValue ? "search-form__input_type_error" : ""
+            pathname === "/movies"
+              ? isErrorClassName(errors.searchMoviesValue)
+              : isErrorClassName(errors.searchSaveMoviesValue)
           } main-input`}
           placeholder={
-            errors.searchValue ? "Нужно ввести ключевое слово" : "Фильм"
+            pathname === "/movies"
+              ? isErrorText(errors.searchMoviesValue)
+              : isErrorText(errors.searchSaveMoviesValue)
           }
           name={
             pathname === "/movies"

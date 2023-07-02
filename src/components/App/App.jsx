@@ -486,12 +486,10 @@ const App = () => {
       localStorage.removeItem("searchMovies");
       localStorage.removeItem("searchInputValue");
       setMovies(filterMovieDuration);
-      resetForm();
     } else if (evt.target.value === "" && pathname === "/saved-movies") {
       localStorage.removeItem("searchSaveMovies");
       localStorage.removeItem("searchSaveMoviesInputValue");
       setMeSaveMovie(filterSaveMovieDuration);
-      resetForm();
     }
   };
 
@@ -571,9 +569,6 @@ const App = () => {
       setMeSaveMovie(filterSaveMovieDuration);
     }
   }, []);
-
-  // Не могу понять это комментарий: блоков catch не должно быть в самих запросах, следует их расположить только в конце цепочки
-  // Блок catch есть везде вроде
 
   return (
     <div className="App">

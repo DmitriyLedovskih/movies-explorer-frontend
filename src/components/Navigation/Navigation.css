@@ -14,6 +14,10 @@
   text-decoration: none;
 }
 
+.navigation__menu-link_active {
+  border-bottom: 2px solid var(--white-color);
+}
+
 .navigation__menu-item:first-of-type .navigation__menu-link {
   display: none;
 }
@@ -38,10 +42,6 @@
 
   .navigation__menu-item:first-of-type .navigation__menu-link {
     display: inline;
-  }
-
-  .navigation__menu-link_active {
-    border-bottom: 2px solid var(--white-color);
   }
 }
 

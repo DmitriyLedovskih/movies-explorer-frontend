@@ -1,28 +1,49 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Navigation.css";
 
-const Navigation = () => {
+const Navigation = ({ closeBurgerMenu }) => {
   return (
     <nav className="navigation">
       <ul className="navigation__menu main-list">
         <li className="navigation__menu-item">
-          <Link to="/" className="navigation__menu-link main-link">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `navigation__menu-link ${
+                isActive ? "navigation__menu-link_active" : ""
+              } main-link`
+            }
+            onClick={closeBurgerMenu}
+          >
             Главная
-          </Link>
+          </NavLink>
         </li>
         <li className="navigation__menu-item">
-          <Link
+          <NavLink
             to="/movies"
-            className="navigation__menu-link navigation__menu-link_active main-link"
+            className={({ isActive }) =>
+              `navigation__menu-link ${
+                isActive ? "navigation__menu-link_active" : ""
+              } main-link`
+            }
+            onClick={closeBurgerMenu}
           >
             Фильмы
-          </Link>
+          </NavLink>
         </li>
         <li className="navigation__menu-item">
-          <Link to="/saved-movies" className="navigation__menu-link main-link">
+          <NavLink
+            to="/saved-movies"
+            className={({ isActive }) =>
+              `navigation__menu-link ${
+                isActive ? "navigation__menu-link_active" : ""
+              } main-link`
+            }
+            onClick={closeBurgerMenu}
+          >
             Сохранённые фильмы
-          </Link>
+          </NavLink>
         </li>
       </ul>
     </nav>

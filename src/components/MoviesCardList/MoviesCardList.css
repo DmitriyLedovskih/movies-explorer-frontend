@@ -28,7 +28,13 @@
   color: var(--white-color);
 }
 
-@media screen and (max-width: 1170px) {
+@media screen and (max-width: 1160px) {
+  .movies-cards {
+    padding: 78px 20px 100px;
+  }
+}
+
+@media screen and (max-width: 990px) {
   .movies-cards {
     padding: 85px 30px 100px;
   }

@@ -16,7 +16,7 @@ const Login = ({
     if (loggedIn) {
       navigate("/");
     }
-  }, []);
+  }, [loggedIn, navigate]);
 
   return (
     <section className="auth-page">

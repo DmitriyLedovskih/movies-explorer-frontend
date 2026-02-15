@@ -54,14 +54,14 @@ const App = () => {
   const searchMovies = JSON.parse(localStorage.getItem("searchMovies"));
   const searchSaveMovies = JSON.parse(localStorage.getItem("searchSaveMovies"));
   const searchCheckboxIsChecked = JSON.parse(
-    localStorage.getItem("searchCheckboxIsChecked")
+    localStorage.getItem("searchCheckboxIsChecked"),
   );
   const searchSaveMoviesCheckboxIsChecked = JSON.parse(
-    localStorage.getItem("searchSaveMoviesCheckboxIsChecked")
+    localStorage.getItem("searchSaveMoviesCheckboxIsChecked"),
   );
   const searchInputValue = localStorage.getItem("searchInputValue");
   const searchSaveMoviesInputValue = localStorage.getItem(
-    "searchSaveMoviesInputValue"
+    "searchSaveMoviesInputValue",
   );
   const loggedIn = localStorage.getItem("loggedIn");
   const [moviesIsChecked, setMoviesIsChecked] = React.useState(false);
@@ -76,7 +76,7 @@ const App = () => {
   const [isOpenInfoTooltip, setIsOpenInfoTooltip] = React.useState(false);
   const [successText, setSuccessText] = React.useState("");
   const [errorText, setErrorText] = React.useState(
-    "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+    "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз",
   );
   const [isLoadingButtonText, setIsLoadingButtonText] = React.useState(false);
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
@@ -90,7 +90,7 @@ const App = () => {
     allMovies.filter((movie) =>
       moviesIsChecked
         ? movie.duration <= DURATION_SHORT_FILM
-        : movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM,
     );
 
   const filterSaveMovieDuration =
@@ -98,7 +98,7 @@ const App = () => {
     saveMovies.filter((movie) =>
       saveMoviesIsChecked
         ? movie.duration <= DURATION_SHORT_FILM
-        : movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM,
     );
 
   const filterFullMovies =
@@ -107,7 +107,7 @@ const App = () => {
       searchInputValue
         ? movie.nameRU.toLowerCase().includes(searchInputValue.toLowerCase()) &&
           movie.duration <= DURATION_SHORT_FILM
-        : movie.duration <= DURATION_SHORT_FILM
+        : movie.duration <= DURATION_SHORT_FILM,
     );
 
   const filterSaveFullMovies =
@@ -118,7 +118,7 @@ const App = () => {
             .toLowerCase()
             .includes(searchSaveMoviesInputValue.toLowerCase()) &&
           movie.duration <= DURATION_SHORT_FILM
-        : movie.duration <= DURATION_SHORT_FILM
+        : movie.duration <= DURATION_SHORT_FILM,
     );
 
   const filterShortMovies =
@@ -127,7 +127,7 @@ const App = () => {
       searchInputValue
         ? movie.nameRU.toLowerCase().includes(searchInputValue.toLowerCase()) &&
           movie.duration > DURATION_SHORT_FILM
-        : movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM,
     );
 
   const filterSaveShortMovies =
@@ -138,7 +138,7 @@ const App = () => {
             .toLowerCase()
             .includes(searchSaveMoviesInputValue.toLowerCase()) &&
           movie.duration > DURATION_SHORT_FILM
-        : movie.duration > DURATION_SHORT_FILM
+        : movie.duration > DURATION_SHORT_FILM,
     );
 
   const signOutParams = () => {
@@ -312,13 +312,13 @@ const App = () => {
         const mov = [...saveMovies, data].filter((movie) =>
           saveMoviesIsChecked
             ? movie.duration <= DURATION_SHORT_FILM
-            : movie.duration > DURATION_SHORT_FILM
+            : movie.duration > DURATION_SHORT_FILM,
         );
         setMeSaveMovie(mov);
         localStorage.setItem("searchSaveMovies", JSON.stringify(mov));
         localStorage.setItem(
           "saveMovies",
-          JSON.stringify([...saveMovies, data])
+          JSON.stringify([...saveMovies, data]),
         );
         setIsSuccess(true);
         setSuccessText("Фильм успешно сохранен!");
@@ -344,14 +344,14 @@ const App = () => {
         const saveDeleteMovie = saveMovies.filter((movie) =>
           saveMoviesIsChecked
             ? movie.duration <= DURATION_SHORT_FILM && movie._id !== movieId
-            : movie.duration > DURATION_SHORT_FILM && movie._id !== movieId
+            : movie.duration > DURATION_SHORT_FILM && movie._id !== movieId,
         );
         setIsSuccess(true);
         setSuccessText(message);
         setMeSaveMovie(saveDeleteMovie);
         localStorage.setItem(
           "searchSaveMovies",
-          JSON.stringify(saveDeleteMovie)
+          JSON.stringify(saveDeleteMovie),
         );
         localStorage.setItem("saveMovies", JSON.stringify(deleteMovie));
         closeAllPopups();
@@ -443,12 +443,12 @@ const App = () => {
             : movie.duration > DURATION_SHORT_FILM &&
               movie.nameRU
                 .toLowerCase()
-                .includes(values.searchMoviesValue.toLowerCase())
+                .includes(values.searchMoviesValue.toLowerCase()),
         );
         setMovies(searchAndFilterMovies);
         localStorage.setItem(
           "searchMovies",
-          JSON.stringify(searchAndFilterMovies)
+          JSON.stringify(searchAndFilterMovies),
         );
         localStorage.setItem("searchInputValue", values.searchMoviesValue);
       } else {
@@ -461,16 +461,16 @@ const App = () => {
             : movie.duration > DURATION_SHORT_FILM &&
               movie.nameRU
                 .toLowerCase()
-                .includes(values.searchSaveMoviesValue.toLowerCase())
+                .includes(values.searchSaveMoviesValue.toLowerCase()),
         );
         setMeSaveMovie(searchAndFilterSaveMovies);
         localStorage.setItem(
           "searchSaveMovies",
-          JSON.stringify(searchAndFilterSaveMovies)
+          JSON.stringify(searchAndFilterSaveMovies),
         );
         localStorage.setItem(
           "searchSaveMoviesInputValue",
-          values.searchSaveMoviesValue
+          values.searchSaveMoviesValue,
         );
       }
     } catch (error) {
@@ -512,22 +512,22 @@ const App = () => {
       setMeSaveMovie(filterSaveFullMovies);
       localStorage.setItem(
         "searchSaveMovies",
-        JSON.stringify(filterSaveFullMovies)
+        JSON.stringify(filterSaveFullMovies),
       );
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
-        evt.target.checked
+        evt.target.checked,
       );
       setSaveMoviesIsChecked(evt.target.checked);
     } else {
       setMeSaveMovie(filterSaveShortMovies);
       localStorage.setItem(
         "searchSaveMovies",
-        JSON.stringify(filterSaveShortMovies)
+        JSON.stringify(filterSaveShortMovies),
       );
       localStorage.setItem(
         "searchSaveMoviesCheckboxIsChecked",
-        evt.target.checked
+        evt.target.checked,
       );
       setSaveMoviesIsChecked(evt.target.checked);
     }
@@ -543,7 +543,7 @@ const App = () => {
       setMeSaveMovie(filterSaveMovieDuration);
       localStorage.setItem(
         "searchSaveMovies",
-        JSON.stringify(filterSaveMovieDuration)
+        JSON.stringify(filterSaveMovieDuration),
       );
     }
 

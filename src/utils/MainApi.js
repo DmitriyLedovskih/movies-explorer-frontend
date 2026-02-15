@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const register = async (name, email, password) => {
   const res = await fetch(`${BASE_URL}/signup`, {

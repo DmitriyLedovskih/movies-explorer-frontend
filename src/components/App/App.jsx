@@ -236,9 +236,9 @@ const App = () => {
     setIsSubmitLoading(true);
     try {
       const data = await login(values.email, values.password);
-      if (data.user) {
+      if (data) {
         navigate("/movies");
-        setCurrentUser(data.user);
+        setCurrentUser(data);
         resetForm();
         localStorage.setItem("loggedIn", true);
         setIsSuccess(true);

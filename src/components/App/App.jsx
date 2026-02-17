@@ -163,6 +163,7 @@ const App = () => {
         setCurrentUser(data.data);
         localStorage.setItem("loggedIn", true);
       }
+      getAllMovies();
     } catch (error) {
       signOutParams();
       setIsSuccess(false);
